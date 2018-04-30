@@ -9,7 +9,7 @@
 
 - My programming language is elegant and easy to use
 
-## Looking at Grammar for Language
+## The Grammar
 ### Keywords
 
 - "new" = Variable Declaration

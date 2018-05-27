@@ -1,3 +1,46 @@
+function compileDeclaration (declarationTree) {
+  console.log("Beginning Code Generation for Variable Declaration");
+  console.log("Declaration Value is " + declarationTree.value.value);
+  console.log("Declaration identifier is ", declarationTree.identifier);
+}
+
+function chooseInstructionSet(programTree) {
+  if (programTree.type === "declaration") {
+    compileDeclaration(programTree);
+  } else {
+    console.log("Error trying to compile");
+    return 
+  }
+}
+
+function mainCompile (program) {
+  var programTrees = parseProgram(program);
+  // Loop over all the tree structures formed from each line
+  // and perform actions
+  for (var i in programTrees) {
+    chooseInstructionSet(programTrees[i]);
+  }
+}
+
+function parseProgram (input) {
+  var statement = parseDeclaration(input);
+  var programTrees = [];
+
+  // new a = 10; a
+  while (statement.type !== null) {
+    programTrees.push(statement);
+    statement = parseDeclaration(statement.rest);
+  }
+
+  if (statement.rest !== "") {
+    console.log("Error compiling. Line is " + statement.rest);
+    return;
+  } 
+
+  console.log("Program successfully parsed!");
+  return programTrees;
+}
+
 function parseDigit(input) {
   var returnObject = {
     type: null,
@@ -22,16 +65,26 @@ function parseKeyword (input) {
   const KEYWORDS = ["new", "if", "else", "num", "char"];
   var returnObject = {
     type: null,
-    value: null
+    value: null,
+    rest: input
   }
 
-  var inputSplit = input.split(" "); 
-  var keyword = inputSplit[0];
-  if (KEYWORDS.includes(keyword)) {
+  var keyword = "";
+  var char = parseValidChar(input);
+
+  if (char.type !== null) {
     returnObject.type = "keyword";
+    while (char.type !== null) {
+      keyword += char.value;
+      char = parseValidChar(char.rest);
+    }
+  }
+
+  if (KEYWORDS.includes(keyword)) {
     returnObject.value = keyword;
   }
-
+  
+  returnObject.rest = char.rest;
   return returnObject;
 }
 
@@ -39,7 +92,8 @@ function parseNumber (input) {
   var strNum = "";
   var returnObject = {
     type: null,
-    value: null
+    value: null,
+    rest: input
   }
 
   var digit = parseDigit(input);
@@ -51,24 +105,33 @@ function parseNumber (input) {
     }
 
     returnObject.value = Number(strNum);
+    returnObject.rest = digit.rest;
   }
 
   return returnObject;
 }
 
-function parseOperator (input) {
-  const VALID_OPERATORS = ["="];
+function parseOperator (input, isAssignment) {
+  const VALID_ASSIGNMENT_OPERATORS = ["="];
+  const VALID_ARITHMETIC_OPERATORS = ["+", "-", "*"];
+
   var returnObject = {
     type: null,
-    value: null
+    value: null,
+    rest: input
   }
  
   var operator = input[0];
 
-  if (VALID_OPERATORS.includes(operator)) {
+  if ((VALID_ASSIGNMENT_OPERATORS.includes(operator)) && (isAssignment)) {
     returnObject.type = "operator";
     returnObject.value = operator;  
+  } else if (VALID_ARITHMETIC_OPERATORS.includes(operator)) {
+    returnObject.type = "operator";
+    returnObject.value = operator;
   }
+
+  returnObject.rest = input.slice(1);
 
   return returnObject;
 }
@@ -96,7 +159,8 @@ function parseIdentifier (input) {
   var identifier = "";
   var returnObject = {
     type: null,
-    value: null
+    value: null,
+    rest: input
   }
 
   var char = parseValidChar(input);
@@ -111,9 +175,24 @@ function parseIdentifier (input) {
     } 
 
     returnObject.value = identifier;
+    returnObject.rest = char.rest;
   }
 
   return returnObject;
+}
+
+function parseWhitespace (input) {
+  var returnObject = {
+    rest: input
+  } 
+
+  //var whiteSpaceCounter = 0;
+
+  if (/\s/.test(input[0])) {
+    return parseWhitespace(input.slice(1));
+  } else {
+    return returnObject;
+  }
 }
 
 function parseDeclaration (statement) {
@@ -122,32 +201,120 @@ function parseDeclaration (statement) {
   // E.g: parsingCounter at 0 is looking for an identifier
   var parsingCounter = 0;
   var returnObject = {
-    type: "declaration",
-    keyword: null,
-    identifier: null,
-    operator: null,
-    value: null
+    type: null,
+    rest: statement
   };
 
   var statementSplit = statement.split(" ");
-  console.log(statementSplit[0]);
 
   // Parsing the keyword
-  var keyword = parseKeyword(statementSplit[0]);
-  returnObject.keyword = keyword;
+  statement = parseWhitespace(statement);
+  var keyword = parseKeyword(statement.rest);
+
+  if (keyword.type === null) {
+    return returnObject;
+  }
 
   // Parsing the identifier
-  var identifier = parseIdentifier(statementSplit[1]);
-  returnObject.identifier = identifier; 
+  statement = parseWhitespace(keyword.rest);
+  var identifier = parseIdentifier(statement.rest);
+
+  if (identifier.type === null) {
+    return returnObject;
+  }
 
   // Parsing an operator
-  var operator = parseOperator(statementSplit[2]);
-  returnObject.operator = operator; 
+  statement = parseWhitespace(identifier.rest)
+  var operator = parseOperator(statement.rest, true);
+  if (operator.type === null) {
+    return returnObject;
+  }
 
-  // Parsing a number
-  console.log(statement[1]);
-  var value = parseNumber(statementSplit[3]);
-  returnObject.value = value; 
+  // returnObject.operator = operator.value; 
+  statement = operator.rest;
+  var value = parseOperation (statement);
+
+  if (value.type === null) {
+    // Parsing a number
+    statement = parseWhitespace(statement);
+    value = parseNumber(statement.rest);
+    if (value.type === null) {
+      value = parseIdentifier(statement.rest);
+    }
+  }
+  
+  if (value.type === null) {
+    return returnObject;
+  }
+
+  var endOfStatement = parseSemiColon(value.rest);
+
+  if (endOfStatement.type === null) {
+    return returnObject;
+  } 
+
+  returnObject.value = value;
+  returnObject.type = "declaration";
+  returnObject.keyword = keyword.value;
+  returnObject.operator = operator.value;
+  returnObject.identifier = identifier.value;
+  returnObject.rest = endOfStatement.rest;
+
+  return returnObject;
+}
+
+function parseSemiColon (input) {
+  returnObject = {
+    type: null,
+    rest: input
+  }
+
+  if (input[0] === ";") {
+    returnObject.rest = input.slice(1);
+    returnObject.type = "EoS";
+  }
+
+  return returnObject;
+}
+function parseOperation (input) {
+  var returnObject = {
+    type: null,
+    rest: input
+  }
+
+  input = parseWhitespace(input);
+  var left = parseNumber(input.rest);
+  if (left.type === null) {
+    left = parseIdentifier(input.rest);
+  }
+
+  if (left.type === null) {
+    return returnObject;
+  }
+
+  input = parseWhitespace(left.rest);
+
+  var operator = parseOperator(input.rest, false);
+  if (operator.type === null) {
+    return returnObject;
+  } 
+
+  input = parseWhitespace(operator.rest);
+  var right = parseNumber (input.rest);
+
+  if (right.type === null) {
+    right = parseIdentifier(input.rest);
+  }
+
+  if (right.type === null) {
+    return returnObject;
+  }
+
+  returnObject.right = right;
+  returnObject.left = left;
+  returnObject.operator = operator.value;
+  returnObject.rest = right.rest;
+  returnObject.type = "binexp";
 
   return returnObject;
 }
@@ -155,5 +322,7 @@ function parseDeclaration (statement) {
 module.exports = {
   parseNumber,
   parseIdentifier,
-  parseDeclaration
+  parseDeclaration,
+  parseProgram,
+  mainCompile
 }

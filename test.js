@@ -1,5 +1,5 @@
 var assert = require('assert');
-var {parseNumber, parseIdentifier, parseDeclaration} = require('./index.js');
+var {parseNumber, parseIdentifier, parseDeclaration, parseProgram, mainCompile} = require('./index.js');
 
 // Parsing Number Related Tests
 
@@ -41,11 +41,50 @@ assert (parseIdentifier("St ark").value === "St");
 // Parsing a Variable Declaration Statement
 
 // Testing a valid declaration
-console.log(parseDeclaration("new i = 13"));
+var sampleDeclaration = parseDeclaration("new i = 13;");
+assert(sampleDeclaration.keyword === "new");
+assert(sampleDeclaration.identifier === "i");
+assert(sampleDeclaration.operator === "=");
+assert(sampleDeclaration.value.value === 13);
 
+// Testing a valid decleration with a 
+// binary expression
+sampleDeclaration = parseDeclaration("new exp = 1 + a;");
+assert(sampleDeclaration.keyword === "new");
+assert(sampleDeclaration.identifier === "exp");
+assert(sampleDeclaration.operator === "=");
+assert(sampleDeclaration.value.left.value === 1);
+assert(sampleDeclaration.value.operator === "+");
+assert(sampleDeclaration.value.right.type === "identifier");
+assert(sampleDeclaration.value.right.value === "a");
+
+// Testing an invalid declaration
+sampleDeclaration = parseDeclaration("Yeet!!!");
+assert(sampleDeclaration.type === null);
+
+// Testing an almost valid declaration
+sampleDeclaration = parseDeclaration("new i - 51 + 51");
+assert(sampleDeclaration.type === null);
+
+// Testing if the rest of code appears in rest
+// after declaration is parsed
+sampleDeclaration = parseDeclaration(
+  "new variable = 256; variable = variable + 1;"
+);
+assert(sampleDeclaration.rest === " variable = variable + 1;");
+
+// Parsing a program
+
+// Parsing a series of declarations
+parseProgram("new b = 12; new l = 14; new d = 16;");
+
+// Compiling the code
+
+// Testing a simple compilation of a declaration
+mainCompile("new i = 13;");
 // Parsing basic arithmetic 
 /*
   These tests will be added later on
 */
 
-console.log("Hooray! All Tests Passed!");
+console.log("*** Hooray! All Tests Passed! ***");

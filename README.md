@@ -3,7 +3,7 @@
 ## Details
 ### Baseline Features
 
-- My programming language allows users to use int variables, if/else conditions, addition    of variables and subtraction of variables
+- My programming language allows users to use basic declaration statements with addition     and subtraction
 
 - My compiler successfully parses the code written in my programming language and prints     out all the 8005 machine code
 
@@ -13,32 +13,18 @@
 ### Keywords
 
 - "new" = Variable Declaration
-- "if" = If Condition
-- "else" = Else Condition
-- "num" = Number
-- "char" = ASCII Character
+- "print" = Print as unsigned char
  
 ### Operators
 
 - "=" = Assignment 
 - "-" = Decrement
 - "+" = Increment
-- "*" = Multiply
-- "^" = Exponentiation
-- "\" = Halve
-- "++" = Increment by one
-- "--" = Decrement by one
-- "==" = Equal to
-- "!=" = Not Equal To
 
 ### Terminals
 
 - " " = Whitespace
 - ";" = End of statement
 
-### Types
-
-- "num" = Number
-- "char" = ASCII Character
 
 

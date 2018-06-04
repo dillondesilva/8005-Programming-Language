@@ -80,9 +80,10 @@ parseProgram("new b = 12; new l = 14; new d = 16;");
 
 // Compiling the code
 
-// Testing a simple compilation of a declaration
-mainCompile("new i = 13;");
-// Parsing basic arithmetic 
+// Testing a simple compilation of an integer declaration
+var machineCode = mainCompile("new i = 13; new p = i + 5; i = 5;");
+console.log(machineCode);
+// Testing Parsing basic arithmetic 
 /*
   These tests will be added later on
 */

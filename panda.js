@@ -142,6 +142,7 @@ function mainCompile (program) {
     machineCode = machineCode.concat(instructionSet);
   }
 
+  console.log("Program successfully compiled!");
   return machineCode;
 }
 

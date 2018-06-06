@@ -81,9 +81,9 @@ Things to keep in mind when declaring variables in Panda
 Samples of valid variable assignments are listed below
 
 ```
-new variableName1 = 13;
-new variableName2 = variableName1;
-new variableName3 = variableName1 + 3;
+variableName1 = 13;
+variableName2 = variableName1;
+variableName3 = variableName1 + 3;
 ```
 Restrictions in Panda for assignments
 

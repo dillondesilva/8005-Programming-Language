@@ -118,3 +118,16 @@ Things to keep in mind when printing in Panda
 - Make sure you don't use floats in your code
 
 - Make sure there is no space between the last part of the statement and semi colon
+
+## Final example
+
+test.pan
+```
+new i = 13;
+print i;
+```
+
+In your terminal perform the following
+```
+panda test.pan
+```

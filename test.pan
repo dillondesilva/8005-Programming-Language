@@ -1,2 +1,3 @@
 new i = 13;
-print i;
+new james = i + 20;
+print james;

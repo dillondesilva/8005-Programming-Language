@@ -1,5 +1,15 @@
 # 8005-Programming-Language 
 
+## Installation
+### Installing Panda
+
+To install Panda, perform the following commands
+```
+npm i 8005-panda-lang -g
+```
+
+Voila! You have successfully installed Panda!
+
 ## Details
 ### Baseline Features
 
@@ -31,16 +41,6 @@
 ### Functions
 
 - "print" = Print
-
-## Installation
-### Installing Panda
-
-To install Panda, perform the following commands
-```
-npm i 8005-panda-lang -g
-```
-
-Voila! You have successfully installed Panda!
 
 ## Documentation
 ### HOW TO: Declarations

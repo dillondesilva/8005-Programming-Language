@@ -15,7 +15,9 @@ fs.readFile(filename, (err, data) => {
     process.exit(1);
   }
 
-  const fileDataToCompile = data.toString();
+  const fileDataToCompileNewlines = data.toString();
+  const fileDataToCompile = fileDataToCompileNewlines.replace(/\n|\r/g, " ").trim();
+
   const machineCode = panda.mainCompile(fileDataToCompile);
   console.log(machineCode);
 });

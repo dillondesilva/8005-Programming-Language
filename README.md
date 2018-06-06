@@ -10,6 +10,16 @@ npm i 8005-panda-lang -g
 
 Voila! You have successfully installed Panda!
 
+## Usage
+### Compiling Panda files
+
+- Valid Panda files have the .pan file extension
+- To compile a .pan file simply perform the following
+
+```
+panda fileName.pan
+```
+
 ## Details
 ### Baseline Features
 

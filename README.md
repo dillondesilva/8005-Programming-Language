@@ -31,11 +31,12 @@ panda fileName.pan
 
 - My programming language allows users to use the print as a number function
 
-## The Grammar
+## The Grammar/Syntax
 ### Keywords
 
 - "new" = Variable Declaration
 - "print" = Print as unsigned char
+- "printAsChar" = Prints a decimal value as it's ASCII equivalent
  
 ### Operators
 
@@ -119,12 +120,36 @@ Things to keep in mind when printing in Panda
 
 - Make sure there is no space between the last part of the statement and semi colon
 
+### HOW TO: Print Int as Char
+
+Samples of valid printAsChar calls are listed below
+
+```
+printAsChar 65;
+printAsChar variable
+```
+Restrictions in Panda for printAsChar
+
+- Inability to print binary expressions
+- Only numerical values 
+
+Things to keep in mind when printing as char in Panda
+
+- Make sure that you don't have variables which exceed over 256 or are under 0 otherwise the code will parse but you will have buggy machine code
+
+- Make sure you don't use floats in your code
+
+- Make sure there is no space between the last part of the statement and semi colon
+
 ## Final example
 
 test.pan
 ```
 new i = 13;
 print i;
+
+i = i + 60;
+printAsChar i;
 ```
 
 In your terminal perform the following

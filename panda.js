@@ -84,10 +84,34 @@ function chooseInstructionSet(programTree) {
   } else if (programTree.type === "print") {
     var instructions = compilePrint(programTree);
     return instructions;
+  } else if (programTree.type === "printAsChar") {
+    var instructions = compilePrintAsChar(programTree);
+    return instructions;
   } else {
     console.error("Error trying to compile");
     return;
   }
+}
+
+function compilePrintAsChar(printTree) {
+  var instructionSet = null;
+
+  if (printTree.value.type === "number") {
+    instructionSet = [10, printTree.value.value, 17];
+  } else if (printTree.value.type === "binexp") {
+    instructionSet = calculateBinExp(printTree.value);
+    instructionSet.push(17);
+  } else if (printTree.value.type === "identifier") {
+    instructionSet = [validIdentifierValue(printTree.value.value)];
+
+    instructionSet.push(17);
+  }
+
+  if (instructionSet !== null) {
+    return instructionSet;
+  } else {
+    console.error("Error compiling. Check your code");
+  } 
 }
 
 function compilePrint (printTree) {
@@ -150,7 +174,6 @@ function parseProgram (input) {
   var statement = parseDeclaration(input);
   var programTrees = [];
 
-  // new a = 10; a
   while (statement.type !== null) {
     programTrees.push(statement);
     statement = parseDeclaration(statement.rest);
@@ -160,6 +183,10 @@ function parseProgram (input) {
 
     if (statement.type === null) {
       statement = parsePrint(statement.rest);
+    }
+
+    if (statement.type === null) {
+      statement = parsePrintAsChar(statement.rest);
     }
   }
 
@@ -193,7 +220,7 @@ function parseDigit(input) {
 }
 
 function parseKeyword (input) {
-  const KEYWORDS = ["new", "print"];
+  const KEYWORDS = ["new", "print", "printAsChar"];
   var returnObject = {
     type: null,
     value: null,
@@ -400,7 +427,7 @@ function parsePrint (statement) {
   // Parsing the keyword
   statement = parseWhitespace(statement);
   var keyword = parseKeyword(statement.rest);
-  if (keyword.type === null) {
+  if (keyword.type === null || keyword.value !== "print") {
     return returnObject;
   }
 
@@ -429,6 +456,49 @@ function parsePrint (statement) {
 
   returnObject.value = value;
   returnObject.type = "print";
+  returnObject.keyword = keyword.value;
+  returnObject.rest = endOfStatement.rest; 
+
+  return returnObject;
+}
+
+function parsePrintAsChar (statement) {
+  var returnObject = {
+    type: null,
+    rest: statement
+  }
+
+  // Parsing the keyword
+  statement = parseWhitespace(statement);
+  var keyword = parseKeyword(statement.rest);
+  if (keyword.type === null || keyword.value !== "printAsChar") {
+    return returnObject;
+  }
+
+  // Parsing the print function parameter (either an identifier or number)
+  statement = keyword.rest;
+  var value = parseOperation (statement);
+  
+  if (value.type === null) {  
+    // Parsing a number
+    statement = parseWhitespace(statement);
+    value = parseNumber(statement.rest);
+    if (value.type === null) {
+      value = parseIdentifier(statement.rest);
+    }
+  }
+  
+  if (value.type === null) {
+    return returnObject;
+  }
+
+  var endOfStatement = parseSemiColon(value.rest);
+
+  if (endOfStatement.type === null) {
+    return returnObject;
+  } 
+  returnObject.value = value;
+  returnObject.type = "printAsChar";
   returnObject.keyword = keyword.value;
   returnObject.rest = endOfStatement.rest; 
 

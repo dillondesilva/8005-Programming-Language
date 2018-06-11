@@ -1,3 +1,2 @@
 new i = 13;
-
-print i;
+printAsChar 68;

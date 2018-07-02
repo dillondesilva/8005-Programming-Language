@@ -1,2 +1,2 @@
-new i = 13;
-printAsChar 68;
+new i = 64;
+print i; 

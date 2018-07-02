@@ -1,5 +1,26 @@
 # 8005-Programming-Language 
 
+## What the 8005 Microprocessor Instruction Set Looks like
+0	Halt
+1	Increment R0 (R0 = R0 + 1)
+2	Decrement R0 (R0 = R0 - 1)
+3	Increment R1 (R1 = R1 + 1)
+4	Decrement R1 (R1 = R1 - 1)
+5	Add (R0 = R0 + R1)
+6	Subtract (R0 = R0 - R1)
+7	Print R0
+8	Jump to address <data> if R0 != 0
+9	Jump to address <data> if R0 == 0
+10	Load <data> in to R0
+11	Load <data> in to R1
+12	Store R0 into address <data>
+13	Store R1 into address <data>
+14	Swap R0 and address <data>
+15	Swap R1 and address <data>
+16	1	Ring the bell!
+17	Print R0 as an ASCII character
+
+Currently, Panda does not support functionality to compile some code into some of these instructions but this has been provided as a reference 
 ## Installation
 ### Installing Panda
 

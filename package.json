@@ -11,6 +11,9 @@
     "url": "git+https://github.com/codetilldrop/8005-Programming-Language.git"
   },
   "author": "Dillon de Silva",
+  "contributors": [
+    "Josh Quail <josh@madbean.com> (https://github.com/realtable/)"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/codetilldrop/8005-Programming-Language/issues"

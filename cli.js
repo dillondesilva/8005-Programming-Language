@@ -4,8 +4,26 @@ const fs = require('fs');
 const panda = require('./panda');
 const filename = process.argv[2];
 
+const readlineSync = require('readline-sync');
+
+function prompt(toCompile) {
+  var answer = readlineSync.question('>>> ');
+  var codeState = panda.mainCompile(toCompile.join(" "))
+  if (answer.trim() == "quit;") {
+    console.log(codeState);
+  } else {
+    if (codeState.slice(0, 4) == "Error") {
+      console.error(codeState);
+    } else {
+      toCompile.push(answer.trim());
+    }
+    prompt(toCompile);
+  }
+}
+
 if (!filename) {
-  console.error('err: requires a valid .pan file');
+  var emptyArray = new Array();
+  prompt(emptyArray);
   process.exit(1);
 }
 

@@ -14,19 +14,19 @@ function compileDeclaration (declarationTree) {
     instructionSet.push(12, variableMemoryCellTrack);
   } else if (declarationTree.value.type === "identifier") {
     instructionSet = [validIdentifierValue(declarationTree.value.value)];
-    instructionSet.push(12, variableMemoryCellTrack); 
+    instructionSet.push(12, variableMemoryCellTrack);
   }
 
   if (instructionSet !== null) {
-    var identifier = declarationTree.identifier; 
+    var identifier = declarationTree.identifier;
 
     var variableMemoryDetails = {identifier: [identifier, variableMemoryCellTrack]};
     memoryAllocations.push(variableMemoryDetails);
-    
+
     variableMemoryCellTrack--;
     return instructionSet;
   } else {
-    throw "Error compiling. Check your code";
+    return new Error("an error occurred while compiling your code.");
   }
 }
 
@@ -51,14 +51,13 @@ function calculateBinExp(binExp) {
     } else {
       instructionSet.push(11, rightValue.value);
     }
-    
+
     if (operator === "+") {
       instructionSet.push(5);
     } else if (operator === "-") {
       instructionSet.push(6);
     } else {
-      console.error("Error Compiling Program. Check code");
-      return;
+      return new Error("an error occurred while compiling your code.");
     }
 
     return instructionSet;
@@ -71,7 +70,7 @@ function validIdentifierValue(identifier) {
       return memoryLocationOfVariable;
     }
   }
-  
+
 }
 
 function chooseInstructionSet(programTree) {
@@ -88,8 +87,7 @@ function chooseInstructionSet(programTree) {
     var instructions = compilePrintAsChar(programTree);
     return instructions;
   } else {
-    console.error("Error trying to compile");
-    return;
+    return new Error("an error occurred while compiling your code.");
   }
 }
 
@@ -110,8 +108,8 @@ function compilePrintAsChar(printTree) {
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    console.error("Error compiling. Check your code");
-  } 
+    return new Error("an error occurred while compiling your code.");
+  }
 }
 
 function compilePrint (printTree) {
@@ -131,7 +129,7 @@ function compilePrint (printTree) {
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    console.error("Error compiling. Check your code");
+    return new Error("an error occurred while compiling your code.");
   }
 }
 
@@ -146,27 +144,33 @@ function compileAssignment (assignmentTree) {
     instructionSet.push(12, memoryLocation);
   } else if (assignmentTree.value.type === "identifier") {
     instructionSet = [validIdentifierValue(assignmentTree.value.value)];
-    instructionSet.push(12, memoryLocation); 
-  }  
+    instructionSet.push(12, memoryLocation);
+  }
 
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    console.error("Error compiling. Check your code");
+    return new Error("an error occurred while compiling your code.");
   }
 }
 
 function mainCompile (program) {
   var programTrees = parseProgram(program);
+  if (programTrees instanceof Error) {
+    return programTrees;
+  }
   // Loop over all the tree structures formed from each line
   // and perform actions
   var machineCode = [];
   for (var i in programTrees) {
     var instructionSet = chooseInstructionSet(programTrees[i]);
-    machineCode = machineCode.concat(instructionSet);
+    if (instructionSet instanceof Error) {
+      return instructionSet;
+    } else {
+      machineCode = machineCode.concat(instructionSet);
+    }
   }
 
-  console.log("Program successfully compiled!");
   return machineCode;
 }
 
@@ -179,7 +183,7 @@ function parseProgram (input) {
     statement = parseDeclaration(statement.rest);
     if (statement.type === null) {
       statement = parseAssignment(statement.rest);
-    } 
+    }
 
     if (statement.type === null) {
       statement = parsePrint(statement.rest);
@@ -191,11 +195,9 @@ function parseProgram (input) {
   }
 
   if (statement.rest !== "") {
-    console.log("Error compiling. Line is " + statement.rest);
-    return;
-  } 
+    return new Error("an error occurred while compiling your code");
+  }
 
-  console.log("Program successfully parsed!");
   return programTrees;
 }
 
@@ -214,7 +216,7 @@ function parseDigit(input) {
     returnObject.type = "digit";
     returnObject.value = digit;
     returnObject.rest = input.slice(1);
-  } 
+  }
 
   return returnObject;
 }
@@ -241,7 +243,7 @@ function parseKeyword (input) {
   if (KEYWORDS.includes(keyword)) {
     returnObject.value = keyword;
   }
-  
+
   returnObject.rest = char.rest;
   return returnObject;
 }
@@ -278,12 +280,12 @@ function parseOperator (input, isAssignment) {
     value: null,
     rest: input
   }
- 
+
   var operator = input[0];
 
   if ((VALID_ASSIGNMENT_OPERATORS.includes(operator)) && (isAssignment)) {
     returnObject.type = "operator";
-    returnObject.value = operator;  
+    returnObject.value = operator;
   } else if (VALID_ARITHMETIC_OPERATORS.includes(operator)) {
     returnObject.type = "operator";
     returnObject.value = operator;
@@ -325,12 +327,12 @@ function parseIdentifier (input) {
   if (char.type !== null) {
     returnObject.type = "identifier";
     while (char.type !== null) {
-      identifier += char.value; 
+      identifier += char.value;
       char = parseValidChar(char.rest);
       if (char.type === null) {
         char = parseDigit(char.rest);
       }
-    } 
+    }
 
     returnObject.value = identifier;
     returnObject.rest = char.rest;
@@ -342,7 +344,7 @@ function parseIdentifier (input) {
 function parseWhitespace (input) {
   var returnObject = {
     rest: input
-  } 
+  }
 
   //var whiteSpaceCounter = 0;
 
@@ -397,7 +399,7 @@ function parseDeclaration (statement) {
       value = parseIdentifier(statement.rest);
     }
   }
-  
+
   if (value.type === null) {
     return returnObject;
   }
@@ -406,7 +408,7 @@ function parseDeclaration (statement) {
 
   if (endOfStatement.type === null) {
     return returnObject;
-  } 
+  }
 
   returnObject.value = value;
   returnObject.type = "declaration";
@@ -435,7 +437,7 @@ function parsePrint (statement) {
   statement = keyword.rest;
   var value = parseOperation (statement);
 
-  if (value.type === null) {  
+  if (value.type === null) {
     // Parsing a number
     statement = parseWhitespace(statement);
     value = parseNumber(statement.rest);
@@ -443,7 +445,7 @@ function parsePrint (statement) {
       value = parseIdentifier(statement.rest);
     }
   }
-  
+
   if (value.type === null) {
     return returnObject;
   }
@@ -452,12 +454,12 @@ function parsePrint (statement) {
 
   if (endOfStatement.type === null) {
     return returnObject;
-  } 
+  }
 
   returnObject.value = value;
   returnObject.type = "print";
   returnObject.keyword = keyword.value;
-  returnObject.rest = endOfStatement.rest; 
+  returnObject.rest = endOfStatement.rest;
 
   return returnObject;
 }
@@ -478,8 +480,8 @@ function parsePrintAsChar (statement) {
   // Parsing the print function parameter (either an identifier or number)
   statement = keyword.rest;
   var value = parseOperation (statement);
-  
-  if (value.type === null) {  
+
+  if (value.type === null) {
     // Parsing a number
     statement = parseWhitespace(statement);
     value = parseNumber(statement.rest);
@@ -487,7 +489,7 @@ function parsePrintAsChar (statement) {
       value = parseIdentifier(statement.rest);
     }
   }
-  
+
   if (value.type === null) {
     return returnObject;
   }
@@ -496,11 +498,11 @@ function parsePrintAsChar (statement) {
 
   if (endOfStatement.type === null) {
     return returnObject;
-  } 
+  }
   returnObject.value = value;
   returnObject.type = "printAsChar";
   returnObject.keyword = keyword.value;
-  returnObject.rest = endOfStatement.rest; 
+  returnObject.rest = endOfStatement.rest;
 
   return returnObject;
 }
@@ -526,7 +528,7 @@ function parseAssignment (statement) {
     return returnObject;
   }
 
-  // returnObject.operator = operator.value; 
+  // returnObject.operator = operator.value;
   statement = operator.rest;
   var value = parseOperation (statement);
 
@@ -538,7 +540,7 @@ function parseAssignment (statement) {
       value = parseIdentifier(statement.rest);
     }
   }
-  
+
   if (value.type === null) {
     return returnObject;
   }
@@ -547,7 +549,7 @@ function parseAssignment (statement) {
 
   if (endOfStatement.type === null) {
     return returnObject;
-  } 
+  }
 
   returnObject.value = value;
   returnObject.type = "assignment";
@@ -571,6 +573,7 @@ function parseSemiColon (input) {
 
   return returnObject;
 }
+
 function parseOperation (input) {
   var returnObject = {
     type: null,
@@ -592,7 +595,7 @@ function parseOperation (input) {
   var operator = parseOperator(input.rest, false);
   if (operator.type === null) {
     return returnObject;
-  } 
+  }
 
   input = parseWhitespace(operator.rest);
   var right = parseNumber (input.rest);

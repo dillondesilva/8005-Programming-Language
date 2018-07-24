@@ -7,19 +7,18 @@ const filename = process.argv[2];
 const readlineSync = require('readline-sync');
 
 function prompt(toCompile) {
-  var answer = readlineSync.question('>>> ');
-  var codeState = panda.mainCompile(toCompile.join(" "))
+  var answer = readlineSync.question('> ');
+  toCompile.push(answer.trim());
 
   if (answer.trim() == "quit;") {
-    console.log(codeState);
+    toCompile.pop();
+    console.log(panda.mainCompile(toCompile.join(" ")));
   } else {
+    var codeState = panda.mainCompile(toCompile.join(" "))
     if (codeState instanceof Error) {
-      console.log(codeState);
-      console.log("asdasdas");
-    } else {
-      toCompile.push(answer.trim());
+      console.error(codeState);
+      toCompile.pop();
     }
-
     prompt(toCompile);
   }
 }

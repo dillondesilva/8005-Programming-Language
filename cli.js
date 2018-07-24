@@ -16,7 +16,7 @@ function prompt(toCompile) {
   } else {
     var codeState = panda.mainCompile(toCompile.join(" "))
     if (codeState instanceof Error) {
-      console.error(codeState);
+      console.error(codeState.toString().replace(codeState.stack, ''));
       toCompile.pop();
     }
     prompt(toCompile);
@@ -31,7 +31,7 @@ if (!filename) {
 
 fs.readFile(filename, (err, data) => {
   if (err) {
-    console.error('an error while trying to read the file.\n' + err);
+    console.error('Error: an error occured while trying to read the file `' + filename + '`');
     process.exit(1);
   }
 
@@ -41,9 +41,8 @@ fs.readFile(filename, (err, data) => {
   const machineCode = panda.mainCompile(fileDataToCompile);
 
   if (machineCode instanceof Error) {
-    console.error(machineCode);
+    console.error(machineCode.toString().replace(machineCode.stack, ''));
   } else {
     console.log(machineCode);
   }
 });
-

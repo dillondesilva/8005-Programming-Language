@@ -3,6 +3,7 @@
 var variableMemoryCellTrack = 255;
 var memoryAllocations = [];
 const MAX_LIMIT = 255;
+const COMPILE_ERROR = "syntax error in the previous line, please rewrite the faulty code.";
 
 function compileDeclaration (declarationTree) {
   var instructionSet = null;
@@ -26,7 +27,7 @@ function compileDeclaration (declarationTree) {
     variableMemoryCellTrack--;
     return instructionSet;
   } else {
-    return new Error("an error occurred while compiling your code.");
+    return new Error(COMPILE_ERROR);
   }
 }
 
@@ -57,7 +58,7 @@ function calculateBinExp(binExp) {
     } else if (operator === "-") {
       instructionSet.push(6);
     } else {
-      return new Error("an error occurred while compiling your code.");
+      return new Error(COMPILE_ERROR);
     }
 
     return instructionSet;
@@ -87,7 +88,7 @@ function chooseInstructionSet(programTree) {
     var instructions = compilePrintAsChar(programTree);
     return instructions;
   } else {
-    return new Error("an error occurred while compiling your code.");
+    return new Error(COMPILE_ERROR);
   }
 }
 
@@ -108,7 +109,7 @@ function compilePrintAsChar(printTree) {
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    return new Error("an error occurred while compiling your code.");
+    return new Error(COMPILE_ERROR);
   }
 }
 
@@ -129,7 +130,7 @@ function compilePrint (printTree) {
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    return new Error("an error occurred while compiling your code.");
+    return new Error(COMPILE_ERROR);
   }
 }
 
@@ -150,7 +151,7 @@ function compileAssignment (assignmentTree) {
   if (instructionSet !== null) {
     return instructionSet;
   } else {
-    return new Error("an error occurred while compiling your code.");
+    return new Error(COMPILE_ERROR);
   }
 }
 
@@ -195,7 +196,7 @@ function parseProgram (input) {
   }
 
   if (statement.rest !== "") {
-    return new Error("an error occurred while compiling your code");
+    return new Error(COMPILE_ERROR);
   }
 
   return programTrees;

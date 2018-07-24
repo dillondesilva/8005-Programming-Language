@@ -4,6 +4,7 @@ const fs = require('fs');
 const panda = require('./panda');
 const filename = process.argv[2];
 
+const pjson = require('./package.json');
 const readlineSync = require('readline-sync');
 
 function prompt(toCompile) {
@@ -24,6 +25,12 @@ function prompt(toCompile) {
 }
 
 if (!filename) {
+  console.log();
+  console.log("Panda Programming Language - v" + pjson.version);
+  console.log("Created by Dillon de Silva");
+  console.log("Type 'quit;' to obtain compiled machine code.")
+  console.log();
+
   var emptyArray = new Array();
   prompt(emptyArray);
   process.exit(1);

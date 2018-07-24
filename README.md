@@ -1,4 +1,4 @@
-# 8005-Programming-Language 
+# 8005-Programming-Language
 
 ## What the 8005 Microprocessor Instruction Set Looks like
 0	Halt
@@ -20,26 +20,26 @@
 16	1	Ring the bell!
 17	Print R0 as an ASCII character
 
-Currently, Panda does not support functionality to compile some code into some of these instructions but this has been provided as a reference 
+Currently, Panda does not support functionality to compile some code into some of these instructions but this has been provided as a reference
 ## Installation
 ### Installing Panda
 
-To install Panda, perform the following commands
-```
-npm i 8005-panda-lang -g
-```
+To install Panda, perform: `npm i 8005-panda-lang -g`
 
 Voila! You have successfully installed Panda!
 
 ## Usage
+### Running Panda interpreter
+
+- To run the Panda interpreter, perform `panda`
+
+- To quit the Panda interpreter and retrieve the machine code from your inputted Panda code, perform  `quit;` in the interpreter
+
+
 ### Compiling Panda files
 
 - Valid Panda files have the .pan file extension
-- To compile a .pan file simply perform the following
-
-```
-panda fileName.pan
-```
+- To compile a .pan file, perform `panda fileName.pan`
 
 ## Details
 ### Baseline Features
@@ -58,10 +58,10 @@ panda fileName.pan
 - "new" = Variable Declaration
 - "print" = Print as unsigned char
 - "printAsChar" = Prints a decimal value as it's ASCII equivalent
- 
+
 ### Operators
 
-- "=" = Assignment 
+- "=" = Assignment
 - "-" = Decrement
 - "+" = Increment
 
@@ -85,10 +85,10 @@ new variableName2 = variableName1;
 new variableName3 = variableName1 + 3;
 ```
 
-Restrictions in Panda for declaring variables 
+Restrictions in Panda for declaring variables
 
 - Inability to assign a value to more than 2 values in a binary expression
-- Only numerical values 
+- Only numerical values
 
 Things to keep in mind when declaring variables in Panda
 
@@ -110,7 +110,7 @@ variableName3 = variableName1 + 3;
 Restrictions in Panda for assignments
 
 - Inability to assign a value to more than 2 values in a binary expression
-- Only numerical values 
+- Only numerical values
 
 Things to keep in mind when assigning variables in Panda
 
@@ -131,7 +131,7 @@ print variable;
 Restrictions in Panda for print
 
 - Inability to print binary expressions
-- Only numerical values 
+- Only numerical values
 
 Things to keep in mind when printing in Panda
 
@@ -152,7 +152,7 @@ printAsChar variable
 Restrictions in Panda for printAsChar
 
 - Inability to print binary expressions
-- Only numerical values 
+- Only numerical values
 
 Things to keep in mind when printing as char in Panda
 
@@ -173,7 +173,4 @@ i = i + 60;
 printAsChar i;
 ```
 
-In your terminal perform the following
-```
-panda test.pan
-```
+In your terminal, perform: `panda test.pan`

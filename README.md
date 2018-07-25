@@ -1,24 +1,26 @@
 # 8005-Programming-Language
 
 ## What the 8005 Microprocessor Instruction Set Looks like
-0	Halt
-1	Increment R0 (R0 = R0 + 1)
-2	Decrement R0 (R0 = R0 - 1)
-3	Increment R1 (R1 = R1 + 1)
-4	Decrement R1 (R1 = R1 - 1)
-5	Add (R0 = R0 + R1)
-6	Subtract (R0 = R0 - R1)
-7	Print R0
-8	Jump to address <data> if R0 != 0
-9	Jump to address <data> if R0 == 0
-10	Load <data> in to R0
-11	Load <data> in to R1
-12	Store R0 into address <data>
-13	Store R1 into address <data>
-14	Swap R0 and address <data>
-15	Swap R1 and address <data>
-16	1	Ring the bell!
-17	Print R0 as an ASCII character
+<ol start="0">
+  <li>Halt</li>
+  <li>Increment R0 (R0 = R0 + 1)</li>
+  <li>Decrement R0 (R0 = R0 - 1)</li>
+  <li>Increment R1 (R1 = R1 + 1)</li>
+  <li>Decrement R1 (R1 = R1 - 1)</li>
+  <li>Add (R0 = R0 + R1)</li>
+  <li>Subtract (R0 = R0 - R1)</li>
+  <li>Print R0</li>
+  <li>Jump to address <data> if R0 != 0</li>
+  <li>Jump to address <data> if R0 == 0</li>
+  <li>Load <data> in to R0</li>
+  <li>Load <data> in to R1</li>
+  <li>Store R0 into address <data></li>
+  <li>Store R1 into address <data></li>
+  <li>Swap R0 and address <data></li>
+  <li>Swap R1 and address <data></li>
+  <li>Ring the bell!</li>
+  <li>Print R0 as an ASCII character</li>
+</ol>
 
 Currently, Panda does not support functionality to compile some code into some of these instructions but this has been provided as a reference
 ## Installation

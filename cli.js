@@ -38,7 +38,8 @@ if (!filename) {
 
 fs.readFile(filename, (err, data) => {
   if (err) {
-    console.error('Error: an error occured while trying to read the file `' + filename + '`');
+    var fileError = new Error('an error occured while trying to read the file `' + filename + '`')
+    console.error(fileError.toString().replace(fileError.stack, ''));
     process.exit(1);
   }
 
@@ -47,9 +48,13 @@ fs.readFile(filename, (err, data) => {
 
   const machineCode = panda.mainCompile(fileDataToCompile);
 
+  console.log();
   if (machineCode instanceof Error) {
+    console.error("Did not compile.");
     console.error(machineCode.toString().replace(machineCode.stack, ''));
   } else {
+    console.log("Successfully compiled.");
     console.log(machineCode);
   }
+  console.log();
 });

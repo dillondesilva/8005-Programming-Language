@@ -3,7 +3,7 @@
 var variableMemoryCellTrack = 255;
 var memoryAllocations = [];
 const MAX_LIMIT = 255;
-const COMPILE_ERROR = "syntax error in the previous line, please rewrite the faulty code.";
+const COMPILE_ERROR = "syntax error, please rewrite the faulty code.";
 
 function compileDeclaration (declarationTree) {
   var instructionSet = null;

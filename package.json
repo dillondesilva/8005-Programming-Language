@@ -21,5 +21,8 @@
   "homepage": "https://github.com/codetilldrop/8005-Programming-Language#readme",
   "bin": {
     "panda": "./cli.js"
+  },
+  "dependencies": {
+    "readline-sync": "^1.4.9"
   }
 }

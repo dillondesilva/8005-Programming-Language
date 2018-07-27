@@ -26,22 +26,22 @@ Currently, Panda does not support functionality to compile some code into some o
 ## Installation
 ### Installing Panda
 
-To install Panda, perform the following commands
-```
-npm i 8005-panda-lang -g
-```
+To install Panda, perform: `npm i 8005-panda-lang -g`
 
 Voila! You have successfully installed Panda!
 
 ## Usage
+### Running Panda interpreter
+
+- To run the Panda interpreter, perform `panda`
+
+- To quit the Panda interpreter and retrieve the machine code from your inputted Panda code, perform  `quit;` in the interpreter
+
+
 ### Compiling Panda files
 
 - Valid Panda files have the .pan file extension
-- To compile a .pan file simply perform the following
-
-```
-panda fileName.pan
-```
+- To compile a .pan file, perform `panda fileName.pan`
 
 ## Details
 ### Baseline Features
@@ -175,7 +175,4 @@ i = i + 60;
 printAsChar i;
 ```
 
-In your terminal perform the following
-```
-panda test.pan
-```
+In your terminal, perform: `panda test.pan`

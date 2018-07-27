@@ -4,14 +4,42 @@ const fs = require('fs');
 const panda = require('./panda');
 const filename = process.argv[2];
 
+const pjson = require('./package.json');
+const readlineSync = require('readline-sync');
+
+function prompt(toCompile) {
+  var answer = readlineSync.question('> ');
+  toCompile.push(answer.trim());
+
+  if (answer.trim() == "quit;") {
+    toCompile.pop();
+    console.log(panda.mainCompile(toCompile.join(" ")));
+  } else {
+    var codeState = panda.mainCompile(toCompile.join(" "))
+    if (codeState instanceof Error) {
+      console.error(codeState.toString().replace(codeState.stack, ''));
+      toCompile.pop();
+    }
+    prompt(toCompile);
+  }
+}
+
 if (!filename) {
-  console.error('err: requires a valid .pan file');
+  console.log();
+  console.log("Panda Programming Language - v" + pjson.version);
+  console.log("Created by Dillon de Silva");
+  console.log("Type 'quit;' to obtain compiled machine code.")
+  console.log();
+
+  var emptyArray = new Array();
+  prompt(emptyArray);
   process.exit(1);
 }
 
 fs.readFile(filename, (err, data) => {
   if (err) {
-    console.error('err: error reading the file', err);
+    var fileError = new Error('an error occured while trying to read the file `' + filename + '`')
+    console.error(fileError.toString().replace(fileError.stack, ''));
     process.exit(1);
   }
 
@@ -19,6 +47,14 @@ fs.readFile(filename, (err, data) => {
   const fileDataToCompile = fileDataToCompileNewlines.replace(/\n|\r/g, " ").trim();
 
   const machineCode = panda.mainCompile(fileDataToCompile);
-  console.log(machineCode);
-});
 
+  console.log();
+  if (machineCode instanceof Error) {
+    console.error("Did not compile.");
+    console.error(machineCode.toString().replace(machineCode.stack, ''));
+  } else {
+    console.log("Successfully compiled.");
+    console.log(machineCode);
+  }
+  console.log();
+});

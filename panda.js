@@ -31,6 +31,11 @@ function compileDeclaration (declarationTree) {
   }
 }
 
+// Compile function for conditional parse tree
+function compileConditional () {
+ // Insert code here 
+}
+
 function calculateBinExp(binExp) {
     var leftValue = binExp.left;
     var rightValue = binExp.right;
@@ -616,6 +621,11 @@ function parseOperation (input) {
   returnObject.type = "binexp";
 
   return returnObject;
+}
+
+// Next component of functionality being added to Panda
+function parseConditional (input) {
+  // Insert code here
 }
 
 module.exports = {

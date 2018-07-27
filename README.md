@@ -176,3 +176,7 @@ printAsChar i;
 ```
 
 In your terminal, perform: `panda test.pan`
+
+## Coming Soon
+
+We're working on some spectacular things with Panda Lang. Our current focus at the moment is ---Conditionals---

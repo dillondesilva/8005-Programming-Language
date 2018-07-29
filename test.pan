@@ -1,3 +1,5 @@
+bell;
+
 new i = 33;
 print i;
 print i - 13;

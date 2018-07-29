@@ -92,6 +92,9 @@ function chooseInstructionSet(programTree) {
   } else if (programTree.type === "printAsChar") {
     var instructions = compilePrintAsChar(programTree);
     return instructions;
+  } else if (programTree.type === "bell") {
+    var instructions = compileBell(programTree);
+    return instructions;
   } else {
     return new Error(COMPILE_ERROR);
   }
@@ -137,6 +140,12 @@ function compilePrint (printTree) {
   } else {
     return new Error(COMPILE_ERROR);
   }
+}
+
+function compileBell (bellTree) {
+  var instructionSet = new Array();
+  instructionSet.push(16);
+  return instructionSet;
 }
 
 function compileAssignment (assignmentTree) {
@@ -198,6 +207,10 @@ function parseProgram (input) {
     if (statement.type === null) {
       statement = parsePrintAsChar(statement.rest);
     }
+    
+    if (statement.type === null) {
+      statement = parseBell(statement.rest);
+    }
   }
 
   if (statement.rest !== "") {
@@ -228,7 +241,7 @@ function parseDigit(input) {
 }
 
 function parseKeyword (input) {
-  const KEYWORDS = ["new", "print", "printAsChar"];
+  const KEYWORDS = ["new", "print", "printAsChar", "bell"];
   var returnObject = {
     type: null,
     value: null,
@@ -365,6 +378,7 @@ function parseDeclaration (statement) {
   // Parsing Counter which stores the positions
   // of what to pass next in a valid declaration.
   // E.g: parsingCounter at 0 is looking for an identifier
+  
   var parsingCounter = 0;
   var returnObject = {
     type: null,
@@ -390,6 +404,7 @@ function parseDeclaration (statement) {
   // Parsing an operator
   statement = parseWhitespace(identifier.rest)
   var operator = parseOperator(statement.rest, true);
+  
   if (operator.type === null) {
     return returnObject;
   }
@@ -510,6 +525,29 @@ function parsePrintAsChar (statement) {
   returnObject.keyword = keyword.value;
   returnObject.rest = endOfStatement.rest;
 
+  return returnObject;
+}
+
+function parseBell (statement) {
+  var returnObject = {
+    type: null,
+    rest: statement
+  }
+  
+  statement = parseWhitespace(statement);
+  var keyword = parseKeyword(statement.rest);
+  if (keyword.type === null || keyword.value !== "bell") {
+    return returnObject;
+  }
+  
+  var endOfStatement = parseSemiColon(keyword.rest);
+
+  if (endOfStatement.type === null) {
+    return returnObject;
+  }
+  
+  returnObject.type = "bell";
+  returnObject.rest = endOfStatement.rest;
   return returnObject;
 }
 
